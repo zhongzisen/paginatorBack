@@ -1,7 +1,10 @@
 var express = require('express');
 var app = express();
+const bodyParser = require('body-parser')
 const getData = require('./mock-data')
-
+const total = 100;
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
 app.all('*', function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Content-Type,Content-Length, Authorization, Accept,X-Requested-With");
@@ -14,8 +17,14 @@ app.all('*', function(req, res, next) {
 
 
 app.get('/', function (req, res) {
-  res.send(getData(10));
+  res.send(getData(total));
 });
+
+app.post('/', function (req, res) {
+    console.log(req.body);
+    const { offset, limit } = req.body;
+    res.send(getData(total).data.slice((offset - 1) * limit, offset * limit));
+  });
 
 var server = app.listen(3000, function () {
   var host = server.address().address;

@@ -23,7 +23,12 @@ app.get('/', function (req, res) {
 app.post('/', function (req, res) {
     console.log(req.body);
     const { offset, limit } = req.body;
-    res.send(getData(total).data.slice((offset - 1) * limit, offset * limit));
+    const data = getData(total);
+    const responseData = {
+      data: getData(total).data.slice((offset - 1) * limit, offset * limit),
+      total
+    };
+    res.send(responseData);
   });
 
 var server = app.listen(3000, function () {
